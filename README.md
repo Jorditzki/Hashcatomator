@@ -1,2 +1,2 @@
 # Hashcatomator
-A small tool to automize wordlist attacks on Truecrypt and Veracrypt Volumes using Hashcat
+A small tool to automatize wordlist attacks on Truecrypt and Veracrypt Volumes using Hashcat
