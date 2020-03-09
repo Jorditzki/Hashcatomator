@@ -10,7 +10,8 @@ def hashcat(method, dicLoc, file):
     for dict in os.listdir(wordlistLocation):
         command = ["hashcat64",     #64-bit Hashcat
                     "--status",     #selbstständiges Update der Comandozeile
-                    "-a","0",       #strait Attack
+                    "--rules-file rules/best64.rule",
+                    "--rules-file rules/generated",
                     "-m",method,    #für Methoden siehe Zeile 39-50
                     file,
                     str(dicLoc) + "\\" + str(dict)]
