@@ -21,23 +21,42 @@ def hashcat(method, dicLoc, file):
 while True:
     print("Hashcat True-/Veracrypt Script:")
     print("-"*30)
-    hcLoc = input("Hashcat Location: ")         #CMD is gonna switch do HC directory
-    file = input("Speicherort der Datei: ") + "\\" + input("Dateiname: ")
+    #Hashcat directory
+    while True:
+        hcLoc = input("Hashcat Location: ")
+        try:
+            os.chdir(hcLoc)
+            break
+        except:
+            print("Ungültiger Pfad!")
+            continue
+    #Directory of hash to attack
+    while True:
+        file = input("Speicherort der Datei: ") + "\\" + input("Dateiname: ")
+        try:
+            os.chdir(file)
+            break
+        except:
+            print("Ungültiger Pfad!")
+            continue
+    #Truecrypt or Veracrypt
     while True:
         hashType = input("(T)ruecrypt oder (V)eracrypt?: ").lower()
         if hashType in ["t", "v"]:
             break
         else:
             print("Ungültige Auswahl!")
-    #Work your way through all given Wordlists
-    wordlistLocation = input("Speicherort der Wortlisten: ") 
-
-
-    try:
-        os.chdir(hcLoc)
-    except:
-        print("Ungültiger Pfad für Hashcat!")
-        continue
+    #Wordlist directory
+    while True:
+        wordlistLocation = input("Speicherort der Wortlisten: ") 
+        try:
+            os.chdir(wordlistLocation)
+            break
+        except:
+            print("Ungültiger Pfad!")
+            continue
+    os.chdir(hcLoc)
+    
 
     if hashType in ["t"]:
         try:
