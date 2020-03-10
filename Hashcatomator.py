@@ -6,12 +6,11 @@
 ################################################
 import os
 
-def hashcat(method, dicLoc, file):
+def hashcat(method, dicLoc, file, rules):
     for dict in os.listdir(wordlistLocation):
         command = ["hashcat64",                 #64-bit Hashcat
                     "--status",                 #automated status updates
-                    "-r rules/best64.rule",
-                    "-r rules/generated.rule",
+                    rules,
                     "-m",method,                #for methods see line 39-50
                     file,
                     str(dicLoc) + "\\" + str(dict)]
@@ -21,40 +20,60 @@ def hashcat(method, dicLoc, file):
 while True:
     print("Hashcat True-/Veracrypt Script:")
     print("-"*30)
+
     #Hashcat directory
     while True:
         hcLoc = input("Hashcat Location: ")
-        try:
-            os.chdir(hcLoc)
+        if os.path.exists(hcLoc):
             break
-        except:
-            print("Ungültiger Pfad!")
-            continue
+        else:
+            print("Ungueltiger Pfad!")
     #Directory of hash to attack
     while True:
         file = input("Speicherort der Datei: ") + "\\" + input("Dateiname: ")
-        try:
-            os.chdir(file)
+        if os.path.isfile(file):
             break
-        except:
-            print("Ungültiger Pfad!")
-            continue
+        else:
+            print("Datei nicht vorhanden!")
+    #Wordlist directory
+    while True:
+        wordlistLocation = input("Speicherort der Wortlisten: ") 
+        if os.path.exists(wordlistLocation):
+            break
+        else:
+            print("Ungueltiger Pfad!")    
     #Truecrypt or Veracrypt
     while True:
         hashType = input("(T)ruecrypt oder (V)eracrypt?: ").lower()
         if hashType in ["t", "v"]:
             break
         else:
-            print("Ungültige Auswahl!")
-    #Wordlist directory
-    while True:
-        wordlistLocation = input("Speicherort der Wortlisten: ") 
-        try:
-            os.chdir(wordlistLocation)
-            break
-        except:
-            print("Ungültiger Pfad!")
-            continue
+            print("Ungueltige Auswahl!")
+    print("""Moegliche Regeln:
+             [1]best64
+             [2]combinator
+             [3]generated
+             [4]leetspeak
+             [5]rockyou-3000""")
+
+    ruleChoice = input("Welche Regeln anwenden? (Zahlen hintereinander angeben):")
+    rules = ""
+
+    for rule in str(ruleChoice):
+        rules += "-r rules\\"
+        if rule in ["1"]:
+            rules += "best64"
+        elif rule  in ["2"]:
+            rules += "combinator"
+        elif rule in ["3"]:
+            rules += "generated"
+        elif rule in ["4"]:
+            rules += "leetspeak"
+        elif rule in ["5"]:
+            rules += "rockyou-3000"
+        rules += ".rule "
+    
+
     os.chdir(hcLoc)
     
 
@@ -62,13 +81,13 @@ while True:
         try:
             for i in range(1,5):        #Hashalgorythm
                 for j in range(1,4):    #Encryptionalgorithm
-                    hashcat("62"+ str(i) + str(j), wordlistLocation, file)
+                    hashcat("62"+ str(i) + str(j), wordlistLocation, file, rules)
         except:
             print("\nKontrollieren Sie die Pfadangaben!\n")
             continue
     elif hashType in ["v"]:
         for i in range(1,8):            #Hashalgorithm
             for j in range(1,4):        #Encryptionalgorithm
-                hashcat("137"+ str(i) + str(j), wordlistLocation, file)
-    if input("Nochmal? ") == "n":
+                hashcat("137"+ str(i) + str(j), wordlistLocation, file, rules)
+    if input("Vorgaenge abgeschlossen!\nErneut ausführen? ") == "n":
         break
